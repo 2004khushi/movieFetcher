@@ -6,5 +6,13 @@ import App from './App.jsx'
 createRoot(document.getElementById('root')).render(
 
     <App />
-
 )
+
+
+
+// button{
+//     border: none;
+//     outline: none;
+//     width: auto;
+//     cursor: pointer;
+// }
