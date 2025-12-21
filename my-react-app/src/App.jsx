@@ -1,5 +1,6 @@
 import Search from './components/Search'
 import Spinner from './components/Spinner'
+import MovieCard from './components/MovieCard'
 import {useState, useEffect} from 'react'
 
 const API_BASE_URL = 'https://api.themoviedb.org/3';
@@ -28,6 +29,7 @@ const App = () => {
             const endpoint = `${API_BASE_URL}/discover/movie?sort_by=popularity.desc`;
 
             const response = await fetch(endpoint, API_OPTIONS); //we getting endpoint by fetch() in react while passing basic api details for authentication+authorization
+            console.log(response);
 
             if(!response.ok){
                 throw new Error('Could not find movies from API');
@@ -42,6 +44,11 @@ const App = () => {
                 return;
             }
 
+            // Even though only errorMessage is displayed in the UI, clearing movieList is about state management, not UI rendering. It prevents:
+            //     1) Memory leaks (holding onto data you're not using)
+            // 2) State inconsistency (showing error but having old data in state)
+            // 3) Future bugs (if you later add logic that checks movieList.length)
+
             setMovieList(data.results || []);
             
         }catch(e){
@@ -54,7 +61,7 @@ const App = () => {
 
     useEffect(() => {
         fetchMovies();
-    },[])
+    },[]) // ← Empty array = "Run only once"
 
 
     return (
@@ -76,7 +83,7 @@ const App = () => {
 
                     {isLoading ? <Spinner /> : errorMessage? (<p className='text-red-900'>{errorMessage}</p>) : <ul>
                         {movieList.map((movie) => (
-                            <p key={movie.id} className='text-white'>{movie.title}</p>
+                            <MovieCard key={movie.id} movie={movie} />
                         ))}
                     </ul>}
                 </section>

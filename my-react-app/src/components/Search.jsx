@@ -1,4 +1,6 @@
 const Search = ({searchTerm, setSearchTerm}) => {
+    console.log({searchTerm});
+
     return (
         <div className = "search">
             <div>
@@ -9,6 +11,8 @@ const Search = ({searchTerm, setSearchTerm}) => {
                 placeholder="Search thru 1000s of movies"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}/>
+
+
             </div>
         </div>
     )
