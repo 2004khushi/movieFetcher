@@ -2,6 +2,7 @@ import Search from './components/Search'
 import Spinner from './components/Spinner'
 import MovieCard from './components/MovieCard'
 import {useState, useEffect} from 'react'
+import {useDebounce} from 'react-use'
 
 const API_BASE_URL = 'https://api.themoviedb.org/3';
 const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
@@ -19,14 +20,18 @@ const App = () => {
     const[errorMessage, setErrorMessage] = useState('');
     const [movieList, setMovieList] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
+    const[debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
 
+    //this is use dto solve the api hitting several times problem
+    //by waiting to hit the request after user typing for half second
+    useDebounce( () => setDebouncedSearchTerm(searchTerm), 500, [searchTerm])
 
-    const fetchMovies = async () => {
+    const fetchMovies = async (query = '') => {
         setIsLoading(true);
         setErrorMessage('');
 
         try{
-            const endpoint = `${API_BASE_URL}/discover/movie?sort_by=popularity.desc`;
+            const endpoint = query ? `${API_BASE_URL}/search/movie?query=${encodeURIComponent(query)}` : `${API_BASE_URL}/discover/movie?sort_by=popularity.desc`;
 
             const response = await fetch(endpoint, API_OPTIONS); //we getting endpoint by fetch() in react while passing basic api details for authentication+authorization
             console.log(response);
@@ -60,8 +65,8 @@ const App = () => {
     }
 
     useEffect(() => {
-        fetchMovies();
-    },[]) // ← Empty array = "Run only once"
+        fetchMovies(debouncedSearchTerm);
+    },[debouncedSearchTerm]) // ←if Empty array = "Run only once"
 
 
     return (
