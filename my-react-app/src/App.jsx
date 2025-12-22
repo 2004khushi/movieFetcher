@@ -3,6 +3,7 @@ import Spinner from './components/Spinner'
 import MovieCard from './components/MovieCard'
 import {useState, useEffect} from 'react'
 import {useDebounce} from 'react-use'
+import {updateSearchCount} from "./appwrite.js";
 
 const API_BASE_URL = 'https://api.themoviedb.org/3';
 const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
@@ -55,6 +56,10 @@ const App = () => {
             // 3) Future bugs (if you later add logic that checks movieList.length)
 
             setMovieList(data.results || []);
+
+            if(query && data.results.length > 0){
+                await updateSearchCount(query, data.results[0]);
+            }
             
         }catch(e){
             console.log(`Error: ${e}`);
@@ -92,7 +97,6 @@ const App = () => {
                         ))}
                     </ul>}
                 </section>
-
             </div>
         </main>
     )
