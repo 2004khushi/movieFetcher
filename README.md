@@ -1,0 +1,1 @@
+I designed a search analytics pipeline using Appwrite where each user search is upserted into a metrics table. I optimized reads using indexed attributes and handled write permissions explicitly to prevent silent failures.
