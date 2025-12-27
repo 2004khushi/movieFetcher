@@ -62,4 +62,6 @@ export const  getTrendingMovies = async () => {
     }catch(e){
         console.log(`Error: ${e}`);
     }
+
 }
+
